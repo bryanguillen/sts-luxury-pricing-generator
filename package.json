@@ -1,0 +1,18 @@
+{
+  "name": "generate-trip-prices",
+  "version": "0.0.1",
+  "description": "Mini-application which generates a price for each trip in a set of trips for STS Luxury.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Bryan Guillen",
+  "license": "ISC",
+  "dependencies": {
+    "@google/maps": "^0.5.5",
+    "convert-units": "^2.3.4",
+    "csvtojson": "^2.0.8",
+    "json2csv": "^4.3.1"
+  }
+}
