@@ -8,8 +8,6 @@
 
  /**********************
   * TODOs
-  * - For 'addPriceToTripMap'
-  *   - Ensure that the args are 'price, trip'
   * - Ensure that each function on page is doing
   *   one thing, and one thing only
   * - Write tests for functions
@@ -41,58 +39,47 @@ const csvFile = './stsTripData.csv';
  ***********************/
 
 function addPricesToCsv(csvFile) {
- parseTripsCsv(csvFile)
-   .then((trips) => {
-     const addPricesToTripsAsynchronously = [];
+  parseTripsCsv(csvFile)
+    .then((trips) => {
+      /*
+       * Returned and used for later use of Promise.all
+       * since the request to Google API is async.
+       */
+      const updatedTripsPromise = [];
 
-     for (let trip of trips) {
-       let origin = getPickupLatLng(trip);
-       let destination = getDropoffLatLng(trip);
-       let addPriceToTripMapPromise = addPriceToTripMap(trip, origin, destination);
-       addPricesToTripsAsynchronously.push(addPriceToTripMapPromise);
-     }
+      for (let i = 0; i < trips.length; i++) {
+        let trip = new Trip(trips[i]);
+        let promiseAddPriceToTrip = trip.generatePrice();
+        updatedTripsPromise.push(promiseAddPriceToTrip);
+      }
 
-     return addPricesToTripsAsynchronously;
-   })
-   .then((addPricesToTripsAsynchronously) => {
-     writeUpdatedTripData(addPricesToTripsAsynchronously);
-   })
-   .catch((error) => {
-     console.log(error);
-   });
-}
-
-function addPriceToTripMap(trip, origin, destination) {
-  return new Promise((resolve, reject) => {
-    getTripMileage(origin, destination)
-      .then((distance) => {
-        const price = getPrice(parseFloat(distance));
-        trip.price = price;
-        resolve(trip);
-      })
-      .catch((error) => {
-        reject(error);
-      });
-  });
+      return updatedTripsPromise;
+    })
+    .then((updatedTripsPromise) => {
+      writeUpdatedTripData(updatedTripsPromise);
+    })
+    .catch((error) => {
+      console.log(error);
+    });
 }
 
 function getDropoffLatLng(trip) {
- const DROPOFF_LATITUDE = 'dropoff_latitude';
- const DROPOFF_LONGITUDE = 'dropoff_longitude';
- const dropoffLatLngObject = trip[DROPOFF_LATITUDE] + ',' + trip[DROPOFF_LONGITUDE];
+  const DROPOFF_LATITUDE = 'dropoff_latitude';
+  const DROPOFF_LONGITUDE = 'dropoff_longitude';
+  const dropoffLatLngObject = trip[DROPOFF_LATITUDE] + ',' + trip[DROPOFF_LONGITUDE];
 
- return dropoffLatLngObject;
+  return dropoffLatLngObject;
 }
 
 function getPickupLatLng(trip) {
- const PICKUP_LATITUDE = 'pickup_latitude';
- const PICKUP_LONGITUDE = 'pickup_longitude';
- const pickupLatLngObject = trip[PICKUP_LATITUDE] + ',' + trip[PICKUP_LONGITUDE];
+  const PICKUP_LATITUDE = 'pickup_latitude';
+  const PICKUP_LONGITUDE = 'pickup_longitude';
+  const pickupLatLngObject = trip[PICKUP_LATITUDE] + ',' + trip[PICKUP_LONGITUDE];
 
- return pickupLatLngObject;
+  return pickupLatLngObject;
 }
 
-function getPrice(miles) {
+function mapDistanceToPrice(miles) {
   let price = '';
 
   if (miles < 6) {
@@ -106,22 +93,6 @@ function getPrice(miles) {
   }
 
   return price;
-}
-
-function getTripMileage(origin, destination) {
-  return new Promise ((resolve, reject) => {
-    googleMapsClient.directions({
-      origin,
-      destination
-    }).asPromise()
-      .then((response) => {
-        distance = response.json.routes[0].legs[0].distance.text;
-        resolve(distance);
-      })
-      .catch((error) => {
-        reject(error);
-      });
-  });
 }
 
 function parseTripsCsv(csvFile) {
@@ -139,9 +110,9 @@ function parseTripsCsv(csvFile) {
 
 function writeUpdatedTripData(updatedTripsData) {
   Promise.all(updatedTripsData)
-        .then((values) => {
-          const json2csvParser = new Json2CsvParser({ values, doubleQuote: '' });
-          const csv = json2csvParser.parse(values);
+        .then((trips) => {
+          const json2csvParser = new Json2CsvParser({ trips, doubleQuote: '' });
+          const csv = json2csvParser.parse(trips);
 
           fs.writeFile('./updatedCsvFile.csv', csv, (error) => {
             if (error) {
@@ -153,6 +124,51 @@ function writeUpdatedTripData(updatedTripsData) {
         .catch((error) => {
           console.log(error);
         })
+}
+
+/**********************
+ * Class(es)
+ ***********************/
+
+class Trip {
+  constructor(tripMap) {
+    this.data = tripMap;
+    this.googleMapsRequestData = {
+      origin: getPickupLatLng(tripMap),
+      destination: getDropoffLatLng(tripMap)
+    }
+  }
+
+  generatePrice() {
+    const getTripMileage = this.getTripMileage;
+    const googleRequestData = this.googleMapsRequestData;
+
+    return new Promise((resolve, reject) => {
+      getTripMileage(googleRequestData) // passed in since this binding gets lost within promise
+        .then((distance) => {
+          const price = mapDistanceToPrice(parseInt(distance)); // Should this be float??? Touch base with company members.
+          this.data.price = price;
+          resolve(this.data);
+        })
+        .catch((error) => {
+          reject(error);
+        });
+    });
+  }
+
+  getTripMileage(googleRequestData) {
+    return new Promise ((resolve, reject) => {
+      googleMapsClient.directions(googleRequestData)
+        .asPromise()
+        .then((response) => {
+          const distance = response.json.routes[0].legs[0].distance.text;
+          resolve(distance);
+        })
+        .catch((error) => {
+          reject(error);
+        });
+    });
+  }
 }
 
 addPricesToCsv(csvFile);
