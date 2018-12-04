@@ -171,4 +171,8 @@ class Trip {
   }
 }
 
+/**********************
+ * Exec
+ ***********************/
+
 addPricesToCsv(csvFile);
