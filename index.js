@@ -8,9 +8,6 @@
 
  /**********************
   * TODOs
-  * - Ensure that each function on page is doing
-  *   one thing, and one thing only
-  * - Write tests for functions
   * - Remove '""' from updated CSV
   * - Wrap this logic into an express app
   *   - When deploying ensure googleApiKey is private
@@ -23,14 +20,9 @@
  ***********************/
 
 const csvToJSON = require('csvtojson');
-const config = require('./config');
-const googleMapsClient = require('@google/maps').createClient({
-  key: config.googleApiKey, // THIS SHOULD BE HIDDEN PROD!!
-  Promise: Promise
-});
 const Json2CsvParser = require('json2csv').Parser;
 const fs = require('fs');
-const convert = require('convert-units');
+const Trip = require('./utils/Trip');
 
 const csvFile = './stsTripData.csv';
 
@@ -63,38 +55,6 @@ function addPricesToCsv(csvFile) {
     });
 }
 
-function getDropoffLatLng(trip) {
-  const DROPOFF_LATITUDE = 'dropoff_latitude';
-  const DROPOFF_LONGITUDE = 'dropoff_longitude';
-  const dropoffLatLngObject = trip[DROPOFF_LATITUDE] + ',' + trip[DROPOFF_LONGITUDE];
-
-  return dropoffLatLngObject;
-}
-
-function getPickupLatLng(trip) {
-  const PICKUP_LATITUDE = 'pickup_latitude';
-  const PICKUP_LONGITUDE = 'pickup_longitude';
-  const pickupLatLngObject = trip[PICKUP_LATITUDE] + ',' + trip[PICKUP_LONGITUDE];
-
-  return pickupLatLngObject;
-}
-
-function mapDistanceToPrice(miles) {
-  let price = '';
-
-  if (miles < 6) {
-    price = '15$';
-  } else if (miles < 9) {
-    price = '17$';
-  } else {
-    // this should be added to another function
-    // so that the logic can be unit tested
-    price = 17 + ((210 * (miles - 9)) / 100) + '$';
-  }
-
-  return price;
-}
-
 function parseTripsCsv(csvFile) {
   return new Promise((resolve, reject) => {
     csvToJSON()
@@ -124,51 +84,6 @@ function writeUpdatedTripData(updatedTripsData) {
         .catch((error) => {
           console.log(error);
         })
-}
-
-/**********************
- * Class(es)
- ***********************/
-
-class Trip {
-  constructor(tripMap) {
-    this.data = tripMap;
-    this.googleMapsRequestData = {
-      origin: getPickupLatLng(tripMap),
-      destination: getDropoffLatLng(tripMap)
-    }
-  }
-
-  generatePrice() {
-    const getTripMileage = this.getTripMileage;
-    const googleRequestData = this.googleMapsRequestData;
-
-    return new Promise((resolve, reject) => {
-      getTripMileage(googleRequestData) // passed in since this binding gets lost within promise
-        .then((distance) => {
-          const price = mapDistanceToPrice(parseInt(distance)); // Should this be float??? Touch base with company members.
-          this.data.price = price;
-          resolve(this.data);
-        })
-        .catch((error) => {
-          reject(error);
-        });
-    });
-  }
-
-  getTripMileage(googleRequestData) {
-    return new Promise ((resolve, reject) => {
-      googleMapsClient.directions(googleRequestData)
-        .asPromise()
-        .then((response) => {
-          const distance = response.json.routes[0].legs[0].distance.text;
-          resolve(distance);
-        })
-        .catch((error) => {
-          reject(error);
-        });
-    });
-  }
 }
 
 /**********************
