@@ -6,6 +6,15 @@
  * @author Bryan Guillen
  */
 
+const getPickupLatLng = require('./getPickupLatLng');
+const getDropoffLatLng = require('./getDropoffLatLng');
+const mapDistanceToPrice = require('./mapDistanceToPrice');
+const config = require('../config');
+const googleMapsClient = require('@google/maps').createClient({
+  key: config.googleApiKey, // THIS SHOULD BE HIDDEN PROD!!
+  Promise: Promise
+});
+
 class Trip {
   constructor(tripMap) {
     this.data = tripMap;
