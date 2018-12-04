@@ -19,72 +19,8 @@
  * Variables
  ***********************/
 
-const csvToJSON = require('csvtojson');
-const Json2CsvParser = require('json2csv').Parser;
-const fs = require('fs');
-const Trip = require('./utils/Trip');
-
+const addPricesToCsv = require('./addPricesToCsv');
 const csvFile = './stsTripData.csv';
-
-/**********************
- * Functions
- ***********************/
-
-function addPricesToCsv(csvFile) {
-  parseTripsCsv(csvFile)
-    .then((trips) => {
-      /*
-       * Returned and used for later use of Promise.all
-       * since the request to Google API is async.
-       */
-      const updatedTripsPromise = [];
-
-      for (let i = 0; i < trips.length; i++) {
-        let trip = new Trip(trips[i]);
-        let promiseAddPriceToTrip = trip.generatePrice();
-        updatedTripsPromise.push(promiseAddPriceToTrip);
-      }
-
-      return updatedTripsPromise;
-    })
-    .then((updatedTripsPromise) => {
-      writeUpdatedTripData(updatedTripsPromise);
-    })
-    .catch((error) => {
-      console.log(error);
-    });
-}
-
-function parseTripsCsv(csvFile) {
-  return new Promise((resolve, reject) => {
-    csvToJSON()
-      .fromFile(csvFile)
-      .then((result) => {
-        resolve(result);
-      })
-      .catch((error) => {
-        reject(error);
-      });
-  });
-}
-
-function writeUpdatedTripData(updatedTripsData) {
-  Promise.all(updatedTripsData)
-        .then((trips) => {
-          const json2csvParser = new Json2CsvParser({ trips, doubleQuote: '' });
-          const csv = json2csvParser.parse(trips);
-
-          fs.writeFile('./updatedCsvFile.csv', csv, (error) => {
-            if (error) {
-              throw error;
-            }
-            console.log('Successully written to file'); // Remove this once testing is done
-          });
-        })
-        .catch((error) => {
-          console.log(error);
-        })
-}
 
 /**********************
  * Exec
