@@ -19,7 +19,7 @@
  * Variables
  ***********************/
 
-const addPricesToCsv = require('./addPricesToCsv');
+const addPricesToCsv = require('./reportPrices/addPricesToCsv');
 const csvFile = './stsTripData.csv';
 
 /**********************
