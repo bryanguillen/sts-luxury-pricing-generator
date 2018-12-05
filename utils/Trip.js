@@ -19,12 +19,12 @@ class Trip {
   constructor(tripMap) {
     this.data = tripMap;
     this.googleMapsRequestData = {
-      origin: getPickupLatLng(tripMap , 'pickup'),
-      destination: getDropoffLatLng(tripMap, 'dropoff')
+      origin: getPickupLatLng(tripMap),
+      destination: getDropoffLatLng(tripMap)
     }
   }
 
-  generatePrice() {
+  addPriceToTrip() {
     const getTripMileage = this.getTripMileage;
     const googleRequestData = this.googleMapsRequestData;
 
@@ -47,7 +47,7 @@ class Trip {
         .asPromise()
         .then((response) => {
           const distance = response.json.routes[0].legs[0].distance.text;
-          resolve(distance);
+          resolve(parseInt(distance, 10));
         })
         .catch((error) => {
           reject(error);

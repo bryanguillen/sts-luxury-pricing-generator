@@ -18,7 +18,7 @@ function addPricesToCsv(csvFile) {
 
       for (let i = 0; i < trips.length; i++) {
         let trip = new Trip(trips[i]);
-        let promiseAddPriceToTrip = trip.generatePrice();
+        let promiseAddPriceToTrip = trip.addPriceToTrip();
         updatedTripsPromise.push(promiseAddPriceToTrip);
       }
 
