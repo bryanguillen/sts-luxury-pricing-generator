@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>STS Luxury | Price Reporter</title>
+
+	<!-- Responsive viewport tag, tells small screens that it's responsive -->
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<!-- Normalize.css, a cross-browser reset file -->
+	<link href="https://cdnjs.cloudflare.com/ajax/libs/normalize/4.1.1/normalize.css" rel="stylesheet">
+
+  <!-- Styles -->
+  <!-- TODO: Move styles to their own file -->
+  <style>
+  .app-container {
+    min-height: 300px;
+  }
+
+  .vertically-center-style-wrapper {
+    display: table;
+    height: 100%;
+    min-height: 300px; /* Same as app-container */
+    width: 100%;
+  }
+
+  .vertically-center {
+    display: table-cell;
+    vertical-align: middle;
+  }
+
+  .csv-file-upload-form {
+    text-align: center;
+  }
+
+
+  .csv-input-label {
+    font-weight: bold;
+  }
+
+  .loading {
+    display: none;
+    text-align: center;
+  }
+  </style>
+</head>
+<body>
+  <div class="app-container">
+    <div class="vertically-center-style-wrapper">
+      <div class="vertically-center">
+         <div class="csv-file-upload-form">
+          <label for="csv-input" class="csv-input-label">Choose CSV File:</label>
+          <input type="file" id="csv-input-field" name="csv-input-field" accept=".csv">
+          <button id="send-csv-button">Submit</button>
+        </div>
+        <div class="loading">
+          <span class="loading-main-text">Loading</span>
+          <span class="loading-dot">.</span>
+          <span class="loading-dot">.</span>
+          <span class="loading-dot">.</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+  <script src="js/app.js"></script>
+</body>
