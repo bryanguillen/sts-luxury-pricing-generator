@@ -7,11 +7,11 @@
  */
 
 function generateLatLng(trip, location) {
- const LATITUDE = location + '_latitude';
- const LONGITUDE = location + '_longitude';
- const latLng = trip[LATITUDE] + ',' + trip[LONGITUDE];
+  const LATITUDE = location + '_latitude';
+  const LONGITUDE = location + '_longitude';
+  const latLng = trip[LATITUDE] + ',' + trip[LONGITUDE];
 
- return latLng;
+  return latLng;
 }
 
 module.exports = generateLatLng;

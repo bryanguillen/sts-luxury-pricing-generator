@@ -10,7 +10,7 @@
 const generateLatLng = require('./generateLatLng');
 
 function getPickupLatLng(trip) {
- return generateLatLng(trip, 'pickup');
+  return generateLatLng(trip, 'pickup');
 }
 
 module.exports = getPickupLatLng;
