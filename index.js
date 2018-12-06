@@ -86,6 +86,11 @@ app.get('/csvUploads/:fileName', (req, res) => {
  * Start server
  ***********************/
 
-app.listen(PORT, () => {
+/**
+ * Use logical statement in order to
+ * allow for environment variable that
+ * hosting environments set (i.e. heroku)
+ */
+app.listen(process.env.PORT || PORT, () => {
   console.log('Server is now listening on port', PORT);
 });
