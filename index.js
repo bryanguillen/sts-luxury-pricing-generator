@@ -3,6 +3,13 @@
  * the application.
  *
  * @author Bryan Guillen
+ *
+ * NOTE: All todo comments below are for global back end code-- this is a way of centralizing for now
+ *
+ * @TODO Remove everywhere code is not DRY
+ * @TODO Refactor and update error handling
+ * @TODO Add tests for more robust development life cycle
+ * @TODO Update so that the uploaded file is only read once (see serverUtils' and reportPrices' modules)
  */
 
 /**********************
@@ -16,8 +23,9 @@ const multer = require('multer');
 const fs = require('fs');
 const inspect = require('util').inspect;
 const path = require('path');
-const upload = multer({ dest: 'csvUploads/' });
+const isValidCsvFile = require('./serverUtils/isValidCsvFile');
 
+const upload = multer({ dest: 'csvUploads/' });
 const app = express();
 
 const PORT = 8080;
@@ -50,15 +58,22 @@ app.post('/csvUploads', upload.single(CSV_FILE_INPUT_FIELD_NAME), function(req, 
   const file = req.file;
   const filePath = file.path;
 
-  addPricesToCsv(filePath)
-  .then((newFile) => {
-    // HACK!!!!!!!
-    res.send(newFile);
+  isValidCsvFile(filePath)
+  .then(() => {
+    addPricesToCsv(filePath)
+    .then((newFile) => {
+      // HACK!!!!!!!
+      res.send(newFile);
+    })
+    .catch((error) => {
+      console.log(error);
+      res.sendStatus(400);
+    });
   })
   .catch((error) => {
     console.log(error);
-    res.sendStatus(500);
-  });
+    res.sendStatus(400);
+  })
 });
 
 /**
