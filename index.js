@@ -44,9 +44,9 @@ app.post('/csvUploads', upload.single(CSV_FILE_INPUT_FIELD_NAME), function(req, 
   const filePath = file.path;
 
   addPricesToCsv(filePath)
-  .then(() => {
+  .then((newFile) => {
     // HACK!!!!!!!
-    res.send(filePath + '.csv');
+    res.send(newFile);
   })
   .catch((error) => {
     console.log(error);
@@ -60,9 +60,9 @@ app.post('/csvUploads', upload.single(CSV_FILE_INPUT_FIELD_NAME), function(req, 
  * it deletes the file from the server given that it
  * is no longer needed once the user downloads new file.
  */
-app.get('/csvUploads/:fileHash', (req, res) => {
-  const fileHash = req.params.fileHash;
-  const fileRelativePath = '/csvUploads/' + fileHash; // relative from root
+app.get('/csvUploads/:fileName', (req, res) => {
+  const fileName = req.params.fileName;
+  const fileRelativePath = '/csvUploads/' + fileName; // relative from root
   res.status(200).sendFile(__dirname + fileRelativePath, (err) => {
     if (err) {
       throw new Error(err);
