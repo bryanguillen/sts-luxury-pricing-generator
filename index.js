@@ -11,6 +11,7 @@
 
 const addPricesToCsv = require('./reportPrices/addPricesToCsv');
 const express = require('express');
+const morgan = require('morgan');
 const multer = require('multer');
 const fs = require('fs');
 const inspect = require('util').inspect;
@@ -24,6 +25,11 @@ const CSV_FILE_INPUT_FIELD_NAME = 'csv-input-field';
 /**********************
  * Middleware
  ***********************/
+
+/**
+ * @description Log HTTP layer
+ */
+app.use(morgan('common'));
 
 /**
  * @description For serving the static files
