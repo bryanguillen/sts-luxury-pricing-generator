@@ -1,3 +1,16 @@
+/**
+ * @description Main script that contains
+ * all of the proprietary logic for the frontend.
+ * The file is split into five individual subcomponents:
+ * - Variables
+ * - Utils
+ * - State mgmt
+ * - DOM manipulation
+ * - Event Handlers
+ *
+ * @author Bryan Guillen
+ */
+
 /**********************
  * Variables
  ***********************/
@@ -12,21 +25,30 @@ var LOADING_DOT_SELECTOR = '.loading-dot';
 // Events
 var CLICK = 'click';
 
+// Others
+var CSV_INPUT_FIELD = 'csv-input-field';
+
 /**********************
  * Utils
  ***********************/
 
 function isCsvFile(fileName) {
   var parsedName = fileName.split('.');
-
   return parsedName[1] === 'csv';
 }
 
+/**
+ * @description Function used for sending file
+ * to server.
+ */
 function sendFile(file) {
   var formData = new FormData();
 
-  formData.append('csv-file-upload', file, file.name);
-  // formData.append('upload_file', true);
+  /**
+   * Add to form data, since server requires
+   * multipart request
+   */
+    formData.append(CSV_INPUT_FIELD, file, file.name);
 
   $.ajax({
       type: 'POST',
@@ -37,6 +59,13 @@ function sendFile(file) {
 
           // download updated file
           window.open(fileUrl);
+
+          /**
+           * The next few lines of
+           * code simply undo all of
+           * what showLoading() does
+           * in order to restore previous state
+           */
 
           // stop the animations
           state.loadingDotsAnimated = false;
@@ -59,7 +88,13 @@ function sendFile(file) {
     });
 }
 
-function generateEqString(selector, index) {
+/**
+ * @description Function used for generating
+ * a selector that chooses the nth of that type within jQuery
+ * (e.g. get the third element of type '.hello' ->
+ * $('.hello:eq(2)')).
+ */
+function generateEqSelector(selector, index) {
   return selector + ':eq(' + index + ')';
 }
 
@@ -75,6 +110,14 @@ var state = {
 * DOM manipulation
 ***********************/
 
+/**
+ * @description Wrapper to make it clear
+ * what is going on within program.
+ */
+function animateLoading() {
+  return animateLoadingDot(0);
+}
+
 function animateLoadingDot(dotIndex) {
   var loadingDots = $(LOADING_DOT_SELECTOR);
   var index = dotIndex !== undefined ? dotIndex : 0;
@@ -82,9 +125,9 @@ function animateLoadingDot(dotIndex) {
   var dot;
 
   if (state.loadingDotsAnimated) {
-    dotSelector = generateEqString(LOADING_DOT_SELECTOR, index);
+    dotSelector = generateEqSelector(LOADING_DOT_SELECTOR, index);
     dot = $(dotSelector);
-    dot.hide(1000, function() {
+    dot.hide(2500, function() {
       var newIndex;
 
       // Check if last loading dot
@@ -97,7 +140,6 @@ function animateLoadingDot(dotIndex) {
       // show hidden dot
       dot.show();
 
-      // recursively call new function
       animateLoadingDot(newIndex);
     });
   }
@@ -116,7 +158,7 @@ function showLoading() {
   state.loadingDotsAnimated = true;
 
   // animate
-  animateLoadingDot()
+  animateLoading()
 }
 
 /**********************
