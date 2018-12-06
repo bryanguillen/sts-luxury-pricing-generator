@@ -30,7 +30,7 @@ function writeUpdatedTripData(file, updatedTripsData) {
                if (err) {
                  throw new Error(err);
                }
-
+               console.log('NEW FILE: ', newFile);
                resolve(newFile);
              });
            });
