@@ -73,11 +73,12 @@ app.get('/csvUploads/:fileName', (req, res) => {
     if (err) {
       throw new Error(err);
     }
-
+    console.log('!!!!!!!!sent file');
     fs.unlink(__dirname + fileRelativePath, (error) => {
       if (error) {
         throw new Error(error);
       }
+      console.log('!!!!!!!!deleted file');
     });
   });
 });
@@ -92,5 +93,5 @@ app.get('/csvUploads/:fileName', (req, res) => {
  * hosting environments set (i.e. heroku)
  */
 app.listen(process.env.PORT || PORT, () => {
-  console.log('Server is now listening on port', PORT);
+  console.log('Server is now listening');
 });
