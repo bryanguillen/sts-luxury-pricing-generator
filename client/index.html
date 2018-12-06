@@ -13,8 +13,19 @@
   <!-- Styles -->
   <!-- TODO: Move styles to their own file -->
   <style>
+  body * {
+		box-sizing: border-box;
+	}
+
   .app-container {
-    min-height: 300px;
+		background: linear-gradient(
+								rgba(0, 0, 0, 0.6),
+      					rgba(0, 0, 0, 0.6)
+    			), url('./images/jumbotron.jpg');
+		background-position: center;
+		background-repeat: none;
+		background-size: cover;
+		height: 100vh;
   }
 
   .vertically-center-style-wrapper {
@@ -29,8 +40,34 @@
     vertical-align: middle;
   }
 
+	.content-container {
+		/* background-color: white; */
+		background-color: rgba(255, 255, 255, 0.9);
+		margin: 0 auto;
+		padding: 10px;
+		width: 50%; /* Should be like 80% when in mobile phone */
+	}
+
+	.app-title-container {
+		text-align: center;
+	}
+	.app-title {
+		/* color: white; */
+		font-size: 35px;
+		font-weight: bold;
+	}
+
+	.app-title-image {
+		height: 50px;
+		position: relative;
+		top: 10px; /* Give a more vertically centered look */
+		width: 50px;
+	}
+
   .csv-file-upload-form {
     text-align: center;
+		margin-bottom: 15px;
+		margin-top: 15px;
   }
 
 
@@ -48,7 +85,12 @@
   <div class="app-container">
     <div class="vertically-center-style-wrapper">
       <div class="vertically-center">
-         <div class="csv-file-upload-form">
+				<div class="content-container">
+				<div class="app-title-container">
+					<img src="./images/logo.png" class="app-title-image"/>
+					<span class="app-title">STS Luxury - Price Reporter</span>
+				</div>
+				<div class="csv-file-upload-form">
           <label for="csv-input" class="csv-input-label">Choose CSV File:</label>
           <input type="file" id="csv-input-field" name="csv-input-field" accept=".csv">
           <button id="send-csv-button">Submit</button>
@@ -59,6 +101,7 @@
           <span class="loading-dot">.</span>
           <span class="loading-dot">.</span>
         </div>
+				</div>
       </div>
     </div>
   </div>
