@@ -16,11 +16,47 @@ var CLICK = 'click';
  * Utils
  ***********************/
 
-function isCsvFile(file) {
-  var name = file.split('\\').pop();
-  var parsedName = name.split('.');
+function isCsvFile(fileName) {
+  var parsedName = fileName.split('.');
 
   return parsedName[1] === 'csv';
+}
+
+function sendFile(file) {
+  var formData = new FormData();
+
+  formData.append('csv-file-upload', file, file.name);
+  // formData.append('upload_file', true);
+
+  $.ajax({
+      type: 'POST',
+      url: '/csvUploads',
+      success: function (fileUrl) {
+          var loadingTextElement = $(LOADING_SELECTOR);
+          var csvFileUploadingContainer = $(CSV_FILE_UPLOAD_FORM_SELECTOR);
+
+          // download updated file
+          window.open(fileUrl);
+
+          // stop the animations
+          state.loadingDotsAnimated = false;
+
+          // hide csv file upload form (i.e. container)
+          csvFileUploadingContainer.css('display', 'block');
+
+          // show loading container
+          loadingTextElement.css('display', 'none');
+      },
+      error: function (error) {
+          console.log(error);
+      },
+      async: true,
+      data: formData,
+      cache: false,
+      contentType: false,
+      processData: false,
+      timeout: 120000
+    });
 }
 
 function generateEqString(selector, index) {
@@ -93,14 +129,16 @@ function onSubmit() {
     var csvInputFieldVal = csvInputField.val();
     var inputFieldNotEmpty= csvInputFieldVal !== '';
     var file;
+    var fileName;
 
-    if (inputFieldNotEmpty && isCsvFile(csvInputFieldVal)) {
-      showLoading();
-      // send form data
-        // within form data cb
-          // stop animations
-            // set do the oppisite of
-            // what is done within show loading
+    if (inputFieldNotEmpty) {
+      file = csvInputField[0].files[0];
+      fileName = file.name;
+
+      if (isCsvFile(fileName)) {
+        showLoading();
+        sendFile(file);
+      }
     }
   });
 }
