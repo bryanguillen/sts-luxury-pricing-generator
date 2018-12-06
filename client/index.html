@@ -45,7 +45,7 @@
 		background-color: rgba(255, 255, 255, 0.9);
 		margin: 0 auto;
 		padding: 10px;
-		width: 50%; /* Should be like 80% when in mobile phone */
+		width: 600px;
 	}
 
 	.app-title-container {
@@ -70,6 +70,10 @@
 		margin-top: 15px;
   }
 
+	/* Added for when resized in order to have space when stacked */
+	.csv-file-upload-form * {
+		margin-top: 10px;
+	}
 
   .csv-input-label {
     font-weight: bold;
@@ -79,6 +83,12 @@
     display: none;
     text-align: center;
   }
+
+	@media only screen and (max-width: 600px) {
+		.content-container {
+			width: 100%;
+		}
+	}
   </style>
 </head>
 <body>
