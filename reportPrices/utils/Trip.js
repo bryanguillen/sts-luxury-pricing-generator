@@ -5,12 +5,12 @@
  *
  * @author Bryan Guillen
  */
-
 const getPickupLatLng = require('./getPickupLatLng');
 const getDropoffLatLng = require('./getDropoffLatLng');
 const mapDistanceToPrice = require('./mapDistanceToPrice');
+const GOOGLE_API_KEY = process.env.GOOGLE_API_KEY;
 const googleMapsClient = require('@google/maps').createClient({
-  key: process.env.GOOGLE_API_KEY,
+  key: GOOGLE_API_KEY,
   Promise: Promise
 });
 
