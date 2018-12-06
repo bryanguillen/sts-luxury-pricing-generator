@@ -69,8 +69,9 @@ app.post('/csvUploads', upload.single(CSV_FILE_INPUT_FIELD_NAME), function(req, 
  */
 app.get('/csvUploads/:fileName', (req, res) => {
   const fileName = req.params.fileName;
-  const file = path.join(__dirname + '/csvUploads/' + fileName);
+  const file = path.join(__dirname + '\\csvUploads\\' + fileName);
 
+  console.log('File Exists', fs.existsSync(file));
   res.status(200).sendFile(file, (err) => {
     if (err) {
       throw new Error(err);
