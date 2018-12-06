@@ -9,9 +9,8 @@
 const getPickupLatLng = require('./getPickupLatLng');
 const getDropoffLatLng = require('./getDropoffLatLng');
 const mapDistanceToPrice = require('./mapDistanceToPrice');
-const config = require('../../config');
 const googleMapsClient = require('@google/maps').createClient({
-  key: config.googleApiKey, // THIS SHOULD BE HIDDEN PROD!!
+  key: process.env.GOOGLE_API_KEY,
   Promise: Promise
 });
 
