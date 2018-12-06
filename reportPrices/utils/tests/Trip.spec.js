@@ -71,7 +71,7 @@ describe('Trip', () => {
     });
 
     it('should return an object with correct price property added', () => {
-      assert.equal(updatedTrip.price, '15$');
+      assert.equal(updatedTrip.price, '15.00');
     });
   });
 });
