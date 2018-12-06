@@ -1,6 +1,8 @@
 /**
  * @description Main function which is invoked
  * to add prices to an STS luxury CSV file.
+ *
+ * @author Bryan Guillen
  */
 
 const parseTripsCsv = require('./utils/parseTripsCsv');
