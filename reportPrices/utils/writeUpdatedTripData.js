@@ -12,6 +12,7 @@
 function writeUpdatedTripData(file, updatedTripsData) {
   return new Promise((resolve, reject) => {
     const STRING = 'string';
+    let deleteCurrentFile = false;
 
     Promise.all(updatedTripsData)
          .then((trips) => {
@@ -20,13 +21,26 @@ function writeUpdatedTripData(file, updatedTripsData) {
 
            if (typeof file === STRING && file.match(/csv$/) === null) {
              file += '.csv';
+             deleteCurrentFile = true; // HACK!!! Delete file with non-csv extension -- the CSV is later deleted, check index.js
            }
 
            fs.writeFile(file, csv, (error) => {
              if (error) {
                throw error;
              }
-             resolve();
+
+             if (deleteCurrentFile) {
+               // HACK FOR DELETING ORIGINAL UPLOADED FILE!!!!
+               let uploadedFileWithoutExt = file;
+               fs.unlink(uploadedFileWithoutExt.replace(/\.csv$/, ''), (err) => {
+                 if (err) {
+                   throw new Error(err);
+                 }
+                 resolve();
+               });
+             } else {
+              resolve();
+             }
            });
          })
          .catch((error) => {
