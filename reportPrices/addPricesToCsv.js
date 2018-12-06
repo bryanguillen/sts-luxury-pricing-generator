@@ -27,8 +27,8 @@ function addPricesToCsv(csvFile) {
       })
       .then((updatedTripsPromise) => {
         writeUpdatedTripData(csvFile, updatedTripsPromise)
-        .then(() => {
-          resolve();
+        .then((newFile) => {
+          resolve(newFile);
         })
         .catch((error) => {
           reject(error);
