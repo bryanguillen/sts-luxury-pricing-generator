@@ -45,13 +45,8 @@ app.post('/csvUploads', upload.single(CSV_FILE_INPUT_FIELD_NAME), function(req, 
 
   addPricesToCsv(filePath)
   .then(() => {
-    fs.readFile(filePath, { encoding: 'utf8' }, (err, data) => {
-      if (err) throw new Error(err);
-      fs.writeFile(filePath, data, (err) => {
-        if (err) throw new Error(err);
-        res.send(filePath + '.csv');
-      })
-    })
+    // HACK!!!!!!!
+    res.send(filePath + '.csv');
   })
   .catch((error) => {
     console.log(error);
@@ -61,11 +56,24 @@ app.post('/csvUploads', upload.single(CSV_FILE_INPUT_FIELD_NAME), function(req, 
 
 /**
  * @description GET endpoint which sends the client the
- * file in order to download from browser.
+ * file in order to download from browser. Additionally,
+ * it deletes the file from the server given that it
+ * is no longer needed once the user downloads new file.
  */
 app.get('/csvUploads/:fileHash', (req, res) => {
   const fileHash = req.params.fileHash;
-  res.status(200).sendFile(__dirname + '/csvUploads/' + fileHash);
+  const fileRelativePath = '/csvUploads/' + fileHash; // relative from root
+  res.status(200).sendFile(__dirname + fileRelativePath, (err) => {
+    if (err) {
+      throw new Error(err);
+    }
+
+    fs.unlink(__dirname + fileRelativePath, (error) => {
+      if (error) {
+        throw new Error(error);
+      }
+    });
+  });
 });
 
 /**********************
