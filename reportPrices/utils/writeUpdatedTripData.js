@@ -9,22 +9,30 @@
  const Json2CsvParser = require('json2csv').Parser;
  const fs = require('fs');
 
-function writeUpdatedTripData(updatedTripsData) {
-  Promise.all(updatedTripsData)
-       .then((trips) => {
-         const json2csvParser = new Json2CsvParser({ trips, doubleQuote: '' });
-         const csv = json2csvParser.parse(trips);
+function writeUpdatedTripData(file, updatedTripsData) {
+  return new Promise((resolve, reject) => {
+    const STRING = 'string';
 
-         fs.writeFile('./updatedCsvFile.csv', csv, (error) => {
-           if (error) {
-             throw error;
+    Promise.all(updatedTripsData)
+         .then((trips) => {
+           const json2csvParser = new Json2CsvParser({ trips, doubleQuote: '' });
+           const csv = json2csvParser.parse(trips);
+
+           if (typeof file === STRING && file.match(/csv$/) === null) {
+             file += '.csv';
            }
-           console.log('Successully written to file'); // Remove this once testing is done
+
+           fs.writeFile(file, csv, (error) => {
+             if (error) {
+               throw error;
+             }
+             resolve();
+           });
+         })
+         .catch((error) => {
+           reject(error);
          });
-       })
-       .catch((error) => {
-         console.log(error);
-       });
+  });
 }
 
 module.exports = writeUpdatedTripData;
