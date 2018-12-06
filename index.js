@@ -76,11 +76,11 @@ app.get('/csvUploads/:fileName', (req, res) => {
       throw new Error(err);
     }
 
-    fs.unlink(file, (error) => {
-      if (error) {
-        throw new Error(error);
-      }
-    });
+    // fs.unlink(file, (error) => {
+    //   if (error) {
+    //     throw new Error(error);
+    //   }
+    // });
   });
 });
 
