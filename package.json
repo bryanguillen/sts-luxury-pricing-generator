@@ -4,6 +4,7 @@
   "description": "Mini-application which generates a price for each trip in a set of trips for STS Luxury.",
   "main": "index.js",
   "scripts": {
+    "start": "nodemon index.js",
     "test": "mocha ./reportPrices/utils/tests/**.spec.js"
   },
   "keywords": [],
