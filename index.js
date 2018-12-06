@@ -74,13 +74,13 @@ app.get('/csvUploads/:fileName', (req, res) => {
   res.status(200).sendFile(file, (err) => {
     if (err) {
       throw new Error(err);
+    } else {
+      fs.unlink(file, (error) => {
+        if (error) {
+          throw new Error(error);
+        }
+      });
     }
-
-    // fs.unlink(file, (error) => {
-    //   if (error) {
-    //     throw new Error(error);
-    //   }
-    // });
   });
 });
 
