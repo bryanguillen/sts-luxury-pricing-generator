@@ -21,7 +21,7 @@ function writeUpdatedTripData(file, updatedTripsData) {
            const csv = json2csvParser.parse(trips);
            const newFile = 'csvUploads\\' + generateTimeStamp() + '.csv';
 
-           fs.writeFile(newFile, csv, (error) => {
+           fs.writeFile(newFile, csv.replace(/"/g, ''), (error) => {
              if (error) {
                throw error;
              }
