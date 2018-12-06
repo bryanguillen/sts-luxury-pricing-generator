@@ -56,7 +56,7 @@ function sendFile(file) {
       success: function (fileUrl) {
           var loadingTextElement = $(LOADING_SELECTOR);
           var csvFileUploadingContainer = $(CSV_FILE_UPLOAD_FORM_SELECTOR);
-
+          console.log('fileuRL', fileUrl);
           // download updated file
           window.open(fileUrl);
 
