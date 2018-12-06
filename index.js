@@ -16,7 +16,7 @@ const multer = require('multer');
 const fs = require('fs');
 const inspect = require('util').inspect;
 const path = require('path');
-const upload = multer({ dest: 'tmp/' });
+const upload = multer({ dest: 'csvUploads/' });
 
 const app = express();
 
@@ -67,10 +67,10 @@ app.post('/csvUploads', upload.single(CSV_FILE_INPUT_FIELD_NAME), function(req, 
  * it deletes the file from the server given that it
  * is no longer needed once the user downloads new file.
  */
-app.get('/tmp/:fileName', (req, res) => {
+app.get('/csvUploads/:fileName', (req, res) => {
   const fileName = req.params.fileName;
-  const file = path.join(__dirname + '/tmp/' + fileName);
-  console.log('!!!!!!!!Exists!!!!!!!!', fs.existsSync())
+  const file = path.join(__dirname + '/csvUploads/' + fileName);
+
   res.status(200).sendFile(file, (err) => {
     if (err) {
       throw new Error(err);
