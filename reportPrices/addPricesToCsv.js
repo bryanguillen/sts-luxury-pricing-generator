@@ -10,7 +10,7 @@ const Trip = require('./utils/Trip');
 const writeUpdatedTripData = require('./utils/writeUpdatedTripData');
 
 function addPricesToCsv(csvFile) {
-  return new Promise((resolve) => {
+  return new Promise((resolve, reject) => {
     parseTripsCsv(csvFile)
       .then((trips) => {
         /*
