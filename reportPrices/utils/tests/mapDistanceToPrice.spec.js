@@ -22,6 +22,12 @@ describe('mapDistanceToPrice', () => {
     assert.equal(price, '19.10');
   });
 
+  // Test another use case other than one
+  it('should return 17 plus 2.10/mile * 2 if arg passed in is 11', () => {
+    const price = mapDistanceToPrice(11);
+    assert.equal(price, '21.20');
+  });
+
   it('should return 17 if arg passed in is equal to 9', () => {
     const price = mapDistanceToPrice(9);
     assert.equal(price, '17.00');
