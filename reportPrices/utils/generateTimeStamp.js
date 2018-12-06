@@ -12,7 +12,7 @@
 const moment = require('moment');
 
 function generateTimeStamp() {
-  return moment().format('YYYY-MM-DD hh mm ss a');
+  return moment().format('YYYY-MM-DD_hh-mm-ssa');
 }
 
 module.exports = generateTimeStamp;
