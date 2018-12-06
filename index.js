@@ -9,29 +9,37 @@
  * Variables
  ***********************/
 
-// Imports
 const addPricesToCsv = require('./reportPrices/addPricesToCsv');
 const express = require('express');
 const multer = require('multer');
 const fs = require('fs');
 const inspect = require('util').inspect;
 const upload = multer({ dest: 'csvUploads/' });
-// Instance(s)
+
 const app = express();
-// // Server Config Constants
-const CSV_UPLOADS_ENDPOINT = '/csvUploads';
+
 const PORT = 8080;
-// Frontend coupled/element name(s)
 const CSV_FILE_INPUT_FIELD_NAME = 'csv-input-field';
 
 /**********************
  * Middleware
  ***********************/
 
-// For serving the static files
+/**
+ * @description For serving the static files
+ */
 app.use('/', express.static('client/'));
 
-app.post(CSV_UPLOADS_ENDPOINT, upload.single('csv-file-upload'), function(req, res) {
+/**
+ * @description POST end point for uploading
+ * file to server. This endpoint is essentially
+ * a wrapper for entire application logic.
+ * Note: It sends the user the file path relative
+ * to the project root. It does this because the frontend
+ * needs the relative URL for the new file, so that it could
+ * request for download. For more on this, please view the frontend 'app.js' code.
+ */
+app.post('/csvUploads', upload.single(CSV_FILE_INPUT_FIELD_NAME), function(req, res) {
   const file = req.file;
   const filePath = file.path;
 
@@ -39,7 +47,7 @@ app.post(CSV_UPLOADS_ENDPOINT, upload.single('csv-file-upload'), function(req, r
   .then(() => {
     fs.readFile(filePath, { encoding: 'utf8' }, (err, data) => {
       if (err) throw new Error(err);
-      fs.writeFile(filePath + '.csv', data, (err) => {
+      fs.writeFile(filePath, data, (err) => {
         if (err) throw new Error(err);
         res.send(filePath + '.csv');
       })
@@ -51,6 +59,10 @@ app.post(CSV_UPLOADS_ENDPOINT, upload.single('csv-file-upload'), function(req, r
   });
 });
 
+/**
+ * @description GET endpoint which sends the client the
+ * file in order to download from browser.
+ */
 app.get('/csvUploads/:fileHash', (req, res) => {
   const fileHash = req.params.fileHash;
   res.status(200).sendFile(__dirname + '/csvUploads/' + fileHash);
