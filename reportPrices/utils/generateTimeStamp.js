@@ -9,10 +9,10 @@
  * @author Bryan Guillen
  */
 
-const moment = require('moment');
+const moment = require('moment-timezone');
 
 function generateTimeStamp() {
-  return moment().format('YYYY-MM-DD_hh-mm-ssa');
+  return moment().tz('America/New_York').format('YYYY-MM-DD_hhmma');
 }
 
 module.exports = generateTimeStamp;
