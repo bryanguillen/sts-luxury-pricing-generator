@@ -9,6 +9,10 @@
  * - Event Handlers
  *
  * @author Bryan Guillen
+ *
+ * @TODO: Consolidate functionality of success and error functions within sendFile
+ * @TODO: Initialize all elements required at top of file?? This can help minimize dom traversal and with DRY
+ * @TODO: Figure out whether or not file should be executed like this (i.e. polluting global scope)
  */
 
 /**********************
