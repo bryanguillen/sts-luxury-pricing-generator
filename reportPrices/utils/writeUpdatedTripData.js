@@ -19,7 +19,7 @@ function writeUpdatedTripData(file, updatedTripsData) {
          .then((trips) => {
            const json2csvParser = new Json2CsvParser({ trips, doubleQuote: '' });
            const csv = json2csvParser.parse(trips);
-           const newFile = 'csvUploads\\' + generateTimeStamp() + '.csv';
+           const newFile = 'tmp\\' + generateTimeStamp() + '.csv';
 
            fs.writeFile(newFile, csv.replace(/"/g, ''), (error) => {
              if (error) {
@@ -30,8 +30,7 @@ function writeUpdatedTripData(file, updatedTripsData) {
                if (err) {
                  throw new Error(err);
                }
-               console.log('NEW FILE: ', newFile);
-               console.log('File Exists', fs.existsSync(file));
+
                resolve(newFile);
              });
            });
