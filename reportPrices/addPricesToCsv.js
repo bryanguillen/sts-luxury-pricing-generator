@@ -8,28 +8,36 @@ const Trip = require('./utils/Trip');
 const writeUpdatedTripData = require('./utils/writeUpdatedTripData');
 
 function addPricesToCsv(csvFile) {
-  parseTripsCsv(csvFile)
-    .then((trips) => {
-      /*
-       * Returned and used for later use of Promise.all
-       * since the request to Google API is async.
-       */
-      const updatedTripsPromise = [];
+  return new Promise((resolve) => {
+    parseTripsCsv(csvFile)
+      .then((trips) => {
+        /*
+         * Returned and used for later use of Promise.all
+         * since the request to Google API is async.
+         */
+        const updatedTripsPromise = [];
 
-      for (let i = 0; i < trips.length; i++) {
-        let trip = new Trip(trips[i]);
-        let promiseAddPriceToTrip = trip.addPriceToTrip();
-        updatedTripsPromise.push(promiseAddPriceToTrip);
-      }
+        for (let i = 0; i < trips.length; i++) {
+          let trip = new Trip(trips[i]);
+          let promiseAddPriceToTrip = trip.addPriceToTrip();
+          updatedTripsPromise.push(promiseAddPriceToTrip);
+        }
 
-      return updatedTripsPromise;
-    })
-    .then((updatedTripsPromise) => {
-      writeUpdatedTripData(updatedTripsPromise);
-    })
-    .catch((error) => {
-      console.log(error);
-    });
+        return updatedTripsPromise;
+      })
+      .then((updatedTripsPromise) => {
+        writeUpdatedTripData(csvFile, updatedTripsPromise)
+        .then(() => {
+          resolve();
+        })
+        .catch((error) => {
+          reject(error);
+        });
+      })
+      .catch((error) => {
+        reject(error);
+      });
+  });
 }
 
 module.exports = addPricesToCsv;
