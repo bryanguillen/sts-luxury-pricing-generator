@@ -67,7 +67,7 @@ app.post('/csvUploads', upload.single(CSV_FILE_INPUT_FIELD_NAME), function(req, 
  * it deletes the file from the server given that it
  * is no longer needed once the user downloads new file.
  */
-app.get('/csvUploads/:fileName', (req, res) => {
+app.get('/tmp/:fileName', (req, res) => {
   const fileName = req.params.fileName;
   const file = path.join(__dirname + '\\tmp\\' + fileName);
   console.log('!!!!!!!!Exists!!!!!!!!', file.existsSync())
