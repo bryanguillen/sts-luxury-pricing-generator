@@ -31,6 +31,7 @@ function writeUpdatedTripData(file, updatedTripsData) {
                  throw new Error(err);
                }
                console.log('NEW FILE: ', newFile);
+               console.log('File Exists', fs.existsSync(file));
                resolve(newFile);
              });
            });
