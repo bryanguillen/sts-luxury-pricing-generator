@@ -75,6 +75,8 @@ function sendFile(file) {
 
           // show loading container
           loadingTextElement.css('display', 'none');
+
+          clearCsvInputFieldVal();
       },
       error: function (error) {
           console.log(error);
@@ -143,6 +145,10 @@ function animateLoadingDot(dotIndex) {
       animateLoadingDot(newIndex);
     });
   }
+}
+
+function clearCsvInputFieldVal() {
+  $(CSV_INPUT_FIELD_SELECTOR).val('');
 }
 
 function showLoading() {
