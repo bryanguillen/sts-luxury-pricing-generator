@@ -52,7 +52,7 @@ function sendFile(file) {
 
   $.ajax({
       type: 'POST',
-      url: '/tmp',
+      url: '/csvUploads',
       success: function (fileUrl) {
           var loadingTextElement = $(LOADING_SELECTOR);
           var csvFileUploadingContainer = $(CSV_FILE_UPLOAD_FORM_SELECTOR);
