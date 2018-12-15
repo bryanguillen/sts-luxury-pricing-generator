@@ -9,6 +9,10 @@
  * - Event Handlers
  *
  * @author Bryan Guillen
+ *
+ * @TODO: Consolidate functionality of success and error functions within sendFile
+ * @TODO: Initialize all elements required at top of file?? This can help minimize dom traversal and with DRY
+ * @TODO: Figure out whether or not file should be executed like this (i.e. polluting global scope)
  */
 
 /**********************
@@ -21,6 +25,8 @@ var CSV_INPUT_FIELD_SELECTOR = '#csv-input-field';
 var CSV_FILE_UPLOAD_FORM_SELECTOR = '.csv-file-upload-form';
 var LOADING_SELECTOR = '.loading';
 var LOADING_DOT_SELECTOR = '.loading-dot';
+var ERROR_MESSAGE_CONTAINER_SELECTOR = '.error-message-container';
+var TRY_AGAIN_BUTTON_SELECTOR = '#try-again-button';
 
 // Events
 var CLICK = 'click';
@@ -56,7 +62,7 @@ function sendFile(file) {
       success: function (fileUrl) {
           var loadingTextElement = $(LOADING_SELECTOR);
           var csvFileUploadingContainer = $(CSV_FILE_UPLOAD_FORM_SELECTOR);
-          console.log('fileuRL', fileUrl);
+
           // download updated file
           window.open(fileUrl);
 
@@ -70,16 +76,41 @@ function sendFile(file) {
           // stop the animations
           state.loadingDotsAnimated = false;
 
-          // hide csv file upload form (i.e. container)
+          // show csv file upload form (i.e. container)
           csvFileUploadingContainer.css('display', 'block');
 
-          // show loading container
+          // hide loading container
           loadingTextElement.css('display', 'none');
 
           clearCsvInputFieldVal();
       },
       error: function (error) {
-          console.log(error);
+        var loadingTextElement = $(LOADING_SELECTOR);
+        var errorMessageContainer = $(ERROR_MESSAGE_CONTAINER_SELECTOR)
+
+        /**
+         * NOTE: THE CODE WITHIN THIS FILE
+         * IS ESSENTIALLY THE SAME (SEE TODO
+         * COMMENT ABOVE FOR ACTION ITEM)
+         */
+
+        /**
+         * The next few lines of
+         * code simply undo all of
+         * what showLoading() does
+         * in order to restore previous state
+         */
+
+        // stop the animations
+        state.loadingDotsAnimated = false;
+
+        // show error message (Note, this is currently generic)
+        errorMessageContainer.css('display', 'block');
+
+        // hide loading
+        loadingTextElement.css('display', 'none');
+
+        clearCsvInputFieldVal();
       },
       async: true,
       data: formData,
@@ -191,10 +222,24 @@ function onSubmit() {
   });
 }
 
+function onTryAgain() {
+  $(TRY_AGAIN_BUTTON_SELECTOR).on(CLICK, function(event) {
+    var errorMessageContainer = $(ERROR_MESSAGE_CONTAINER_SELECTOR);
+    var csvFileUploadingContainer = $(CSV_FILE_UPLOAD_FORM_SELECTOR);
+
+    // hide error message container
+    errorMessageContainer.css('display', 'none');
+
+    // show csv file uploading continer
+    csvFileUploadingContainer.css('display', 'block');
+  });
+}
+
 /**********************
  * Register event handlers
  ***********************/
 
 $(function() {
   onSubmit();
+  onTryAgain();
 })

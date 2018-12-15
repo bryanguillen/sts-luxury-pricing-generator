@@ -19,7 +19,7 @@ function writeUpdatedTripData(file, updatedTripsData) {
          .then((trips) => {
            const json2csvParser = new Json2CsvParser({ trips, doubleQuote: '' });
            const csv = json2csvParser.parse(trips);
-           const newFile = 'tmp\\' + generateTimeStamp() + '.csv';
+           const newFile = 'csvUploads/' + generateTimeStamp() + '.csv';
 
            fs.writeFile(newFile, csv.replace(/"/g, ''), (error) => {
              if (error) {

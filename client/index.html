@@ -84,6 +84,15 @@
     text-align: center;
   }
 
+	.error-message-container {
+		display: none;
+		text-align: center;
+	}
+
+	.error-message {
+		color: red;
+	}
+
 	@media only screen and (max-width: 600px) {
 		.content-container {
 			width: 100%;
@@ -111,6 +120,10 @@
           <span class="loading-dot">.</span>
           <span class="loading-dot">.</span>
         </div>
+				<div class="error-message-container">
+					<p class="error-message">Ensure csv file is valid</p>
+					<button id="try-again-button">Try Again</button>
+				</div>
 				</div>
       </div>
     </div>
