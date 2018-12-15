@@ -17,19 +17,18 @@ describe('mapDistanceToPrice', () => {
     assert.equal(price, '17.00');
   });
 
-  it('should return 17 plus 2.10/mile if arg passed in is greater than 9', () => {
+  it('should return 17 plus 2.00/mile if arg passed in is greater than or equal to 9', () => {
     const price = mapDistanceToPrice(10);
-    assert.equal(price, '19.10');
+    assert.equal(price, '21.00');
   });
 
-  // Test another use case other than one
-  it('should return 17 plus 2.10/mile * 2 if arg passed in is 11', () => {
+  it('should return 17 plus 2.00/mile * 2 if arg passed in is 11', () => {
     const price = mapDistanceToPrice(11);
-    assert.equal(price, '21.20');
+    assert.equal(price, '23.00');
   });
 
-  it('should return 17 if arg passed in is equal to 9', () => {
+  it('should return 19 if arg passed in is equal to 9', () => {
     const price = mapDistanceToPrice(9);
-    assert.equal(price, '17.00');
+    assert.equal(price, '19.00');
   });
 });
